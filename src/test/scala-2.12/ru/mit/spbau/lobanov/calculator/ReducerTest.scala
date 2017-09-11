@@ -16,7 +16,6 @@ class ReducerTest {
   private val five = new Constant[Int]("5", 5)
   private val two = new Constant[Int]("2", 2)
   private val one = new Constant[Int]("1", 1)
-  private val zero = new Constant[Int]("0", 0)
   private val rnd = new Function[Int]("rnd", 0, _ => 7)
   private val sqr = new Function[Int]("sqr", 1, x => x.head * x.head)
   private val pow = new Function[Int]("pow", 2, x => math.pow(x.head, x(1)).toInt)
@@ -44,37 +43,18 @@ class ReducerTest {
     Assert.assertEquals(41, evaluator.reduce(case8))
   }
 
-//  @Test
-//  def functions(): Unit = {
-//    val case1 = List(rnd, lBracket, rBracket, bPlus, Y, bMult, A) // rnd() + Y * A
-//    val expectedResult1 = List(rnd, Y, A, bMult, bPlus)
-//    Assert.assertEquals(expectedResult1, evaluator.toPostfixNotation(case1))
-//
-//    val case2 = List(sqrt, sqrt, X) // sqrt sqrt X
-//    val expectedResult2 = List(X, sqrt, sqrt)
-//    Assert.assertEquals(expectedResult2, evaluator.toPostfixNotation(case2))
-//
-//    val case3 = List(sqrt, sqrt, rnd, lBracket, rBracket) // sqrt sqrt rnd()
-//    val expectedResult3 = List(rnd, sqrt, sqrt)
-//    Assert.assertEquals(expectedResult3, evaluator.toPostfixNotation(case3))
-//
-//    val case4 = List(pow, lBracket, sqrt, lBracket, X, rBracket, comma, sqrt, Y, rBracket) // pow (sqrt(X), sqrt Y)
-//    val expectedResult4 = List(X, sqrt, Y, sqrt, pow)
-//    Assert.assertEquals(expectedResult4, evaluator.toPostfixNotation(case4))
-//
-//    val case5 = List(uMinus, pow, lBracket, X, bPlus, lBracket, uMinus, X, rBracket, comma, A, bMult, B, rBracket) // -pow(X+(-X), A*B)
-//    val expectedResult5 = List(X, X, uMinus, bPlus, A, B, bMult, pow, uMinus)
-//    Assert.assertEquals(expectedResult5, evaluator.toPostfixNotation(case5))
-//  }
-//
-//  @Test
-//  def highPriorityUnaryOperation(): Unit = {
-//    val case1 = List(B, bPlus, Y, bMult, uDollar, A) // B + Y * $A
-//    val expectedResult1 = List(B, Y, A, uDollar, bMult, bPlus)
-//    Assert.assertEquals(expectedResult1, evaluator.toPostfixNotation(case1))
-//
-//    val case2 = List(uMinus, X, bPow, X, bPlus, uDollar, Y, bPow, uDollar, Y) // -X ^ X + $Y^$Y
-//    val expectedResult2 = List(X, X, bPow, uMinus, Y, uDollar, Y, uDollar, bPow, bPlus)
-//    Assert.assertEquals(expectedResult2, evaluator.toPostfixNotation(case2))
-//  }
+  @Test
+  def functions(): Unit = {
+    val case2 = List(two, sqr, sqr) // sqr sqr 2
+    Assert.assertEquals(16, evaluator.reduce(case2))
+
+    val case3 = List(rnd, sqr, sqr) // sqrt sqrt rnd()
+    Assert.assertEquals(7 * 7 * 7 * 7, evaluator.reduce(case3))
+
+    val case4 = List(ten, two, pow) // pow (10, 2)
+    Assert.assertEquals(100, evaluator.reduce(case4))
+
+    val case5 = List(five, two, uMinus, bPlus, two, five, bMult, pow, uMinus) // -pow(5+(-2), 2*five)
+    Assert.assertEquals(-math.pow(3, 10).toInt, evaluator.reduce(case5))
+  }
 }
