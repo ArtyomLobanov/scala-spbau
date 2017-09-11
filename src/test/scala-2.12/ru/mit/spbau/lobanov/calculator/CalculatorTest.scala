@@ -84,7 +84,7 @@ class CalculatorTest {
     val case3 = "!T || !F"
     Assert.assertEquals(true, logicEvaluator.evaluate(case3))
 
-    val case4 = "xor(!F, T && !F"
+    val case4 = "xor(!F, T && !F)"
     Assert.assertEquals(false, logicEvaluator.evaluate(case4))
   }
 

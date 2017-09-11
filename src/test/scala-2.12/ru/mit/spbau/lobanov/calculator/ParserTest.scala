@@ -118,6 +118,6 @@ class ParserTest {
     Assert.assertEquals(1, parser.parse("sqrt(ten)").size)
     Assert.assertEquals(0, parser.parse("sqrt(te").size)
     Assert.assertEquals(0, parser.parse("sqrt(te)n").size)
-    Assert.assertEquals(0, parser.parse("ten-(ten)").size)
+    Assert.assertEquals(1, parser.parse("ten-(ten)").size)
   }
 }

@@ -16,8 +16,20 @@ class Evaluator[T](valueParser: String => Optional[T], elements: Element[T]*) {
 
   def evaluate(input: String): T = {
     val elements = parser.parse(input)
-    val toEvaluate = toPostfixNotation(elements.head)
-    reduce(toEvaluate)
+    val results = new mutable.MutableList[T]()
+    for (element <- elements) {
+      try {
+        results += reduce(toPostfixNotation(element))
+      } catch {
+        case _: Exception =>
+      }
+    }
+    if (results.isEmpty) {
+      throw new RuntimeException("Cant parse or evaluate expression")
+    } else if (results.size != 1) {
+      throw new RuntimeException("Interpretation is not unique")
+    }
+    results.head
   }
 
   def reduce(postfixNotation: List[Element[T]]): T = {
@@ -36,9 +48,11 @@ class Evaluator[T](valueParser: String => Optional[T], elements: Element[T]*) {
           for (_ <- 0 until arity)
             arguments += stack.poll()
           stack.push(implementation.apply(arguments.reverse.toList))
-        case _ => println("Unexpected situation")
+        case _ => throw new RuntimeException("Internal conversion error")
       }
     }
+    if (stack.size != 1)
+      throw new RuntimeException("Evaluation error")
     stack.poll()
   }
 
@@ -79,6 +93,8 @@ class Evaluator[T](valueParser: String => Optional[T], elements: Element[T]*) {
       while (!stack.isEmpty && stack.peek() != leftBracket) {
         result += stack.poll()
       }
+    } else {
+      throw new RuntimeException("Unexpected service symbol")
     }
   }
 

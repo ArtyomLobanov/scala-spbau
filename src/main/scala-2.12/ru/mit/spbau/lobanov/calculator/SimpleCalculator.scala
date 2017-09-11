@@ -30,7 +30,8 @@ object SimpleCalculator {
       try {
         println(evaluator.evaluate(ln))
       } catch {
-        case e: Exception => println("Something went wrong!")
+        case e: Exception =>
+          println("Something went wrong! " + e.getMessage)
       }
     }
   }
