@@ -12,7 +12,7 @@ class MessageParser extends RegexParsers {
   }
 
   val addSeries: Parser[AddSeries] =
-    "новый сериая".r ~> seriesParser ^^ {
+    "новый сериал".r ~> seriesParser ^^ {
       name => AddSeries(name)
     }
 
