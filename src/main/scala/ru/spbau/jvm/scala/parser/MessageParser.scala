@@ -48,7 +48,7 @@ class MessageParser extends RegexParsers {
 
 object MessageParser extends MessageParser {
   def parse(text: String): UserMessage = {
-    parse(userMessage, text) match {
+    parseAll(userMessage, text) match {
       case Success(message, _) => message
       case _ => WrongMessage
     }
